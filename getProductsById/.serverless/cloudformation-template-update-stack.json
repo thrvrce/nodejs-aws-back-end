@@ -161,7 +161,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/get-products-by-id-API/dev/1631135039019-2021-09-08T21:03:59.019Z/get-products-by-id-API.zip"
+          "S3Key": "serverless/get-products-by-id-API/dev/1631141607349-2021-09-08T22:53:27.349Z/get-products-by-id-API.zip"
         },
         "Handler": "getProductsById.getProductsById",
         "Runtime": "nodejs14.x",
@@ -179,14 +179,14 @@
         "GetProductsByIdLogGroup"
       ]
     },
-    "GetProductsByIdLambdaVersion0ysY0Hyfq1er4hpujFOcp40fNQLEUZXJkzM85qd1Bk": {
+    "GetProductsByIdLambdaVersion3b34AbmlhdfI0cPLny2RSRsne5dnOD12rB8A3xfobo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetProductsByIdLambdaFunction"
         },
-        "CodeSha256": "inzo2U1b6GYLgiGaSzTAlou6toUBTQETVKhZVcmUwaE="
+        "CodeSha256": "8HrC7mvqGuIQzyNKCgyy/4Ql/IJrYJWXQ8ti5l6XmJw="
       }
     },
     "ApiGatewayRestApi": {
@@ -335,7 +335,7 @@
         "Name": "get-products-by-id-API-dev | Validate request body and querystring parameters"
       }
     },
-    "ApiGatewayDeployment1631135037440": {
+    "ApiGatewayDeployment1631141605726": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -398,7 +398,7 @@
     "GetProductsByIdLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetProductsByIdLambdaVersion0ysY0Hyfq1er4hpujFOcp40fNQLEUZXJkzM85qd1Bk"
+        "Ref": "GetProductsByIdLambdaVersion3b34AbmlhdfI0cPLny2RSRsne5dnOD12rB8A3xfobo"
       },
       "Export": {
         "Name": "sls-get-products-by-id-API-dev-GetProductsByIdLambdaFunctionQualifiedArn"

@@ -29,9 +29,10 @@ const getProductsById = async (event) => {
   let message = 'ok';
   const { productId = '' } = event.pathParameters;
   console.log({ resource, path, httpMethod, queryStringParameters, productId});
+  const client = new Client(dbOptions);
   try {
     if (productId) {
-      const client = new Client(dbOptions);
+
       await client.connect();
       const {rows} = await client.query(`
       select products.*, stocks.count
@@ -55,6 +56,7 @@ const getProductsById = async (event) => {
     message = err.message;
   }
   finally {
+    client.end();
     return {
       headers: {
         'Content-Type': 'application/json',
