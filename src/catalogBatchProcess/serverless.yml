@@ -1,0 +1,47 @@
+service: nodejs-aws-task6
+
+frameworkVersion: '2'
+
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: eu-west-1
+
+  environment:
+    SQS_URL:
+      Ref: SQSQueue
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+        Properties:
+        ReceiveMessageWaitTimeSeconds: 20
+
+  Outputs:
+    CatalogItemsQueueUrl:
+        Value:
+          Ref: SQSQueue
+        Export:
+          Name: catalogItemsQueueUrl
+    CatalogItemsQueueArn:
+        Value: !GetAtt SQSQueue.Arn
+        Export:
+          Name: catalogItemsQueueArn
+
+functions:
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+              Fn::GetAtt:
+                  - SQSQueue
+                  - Arn
+
