@@ -12,8 +12,22 @@
       "environment": {
         "SQS_URL": {
           "Ref": "SQSQueue"
+        },
+        "SNS_ARN": {
+          "Ref": "SNSTopic"
         }
       },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "sns:*"
+          ],
+          "Resource": {
+            "Ref": "SNSTopic"
+          }
+        }
+      ],
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -152,6 +166,9 @@
                         ]
                       },
                       {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
+                      },
+                      {
                         "Effect": "Allow",
                         "Action": [
                           "sqs:ReceiveMessage",
@@ -194,7 +211,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/nodejs-aws-task6/dev/1633797509517-2021-10-09T16:38:29.517Z/nodejs-aws-task6.zip"
+                "S3Key": "serverless/nodejs-aws-task6/dev/1633800535355-2021-10-09T17:28:55.355Z/nodejs-aws-task6.zip"
               },
               "Handler": "handler.catalogBatchProcess",
               "Runtime": "nodejs14.x",
@@ -205,6 +222,9 @@
                 "Variables": {
                   "SQS_URL": {
                     "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"SQS_URL\"]"
+                  },
+                  "SNS_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"SNS_ARN\"]"
                   }
                 }
               },
@@ -219,14 +239,14 @@
               "CatalogBatchProcessLogGroup"
             ]
           },
-          "CatalogBatchProcessLambdaVersionH8AGzJEWDHj0mpMmHj5Sy3v2l7NCSOsCcLx493FJB4E": {
+          "CatalogBatchProcessLambdaVersionlzlTXszOUrlKFdpuwpoJOw3FsAjjE0BVA58HP9tdY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CatalogBatchProcessLambdaFunction"
               },
-              "CodeSha256": "YploRwkrD6GPRT02MsDUZgdU6qjUzSXz/IgiZ/JhRWo="
+              "CodeSha256": "0HjjseeQ0v9hI9xucSlTC0k9Eh0a+FEmJ7xP921Q6b0="
             }
           },
           "CatalogBatchProcessEventSourceMappingSQSSQSQueue": {
@@ -257,6 +277,22 @@
               "QueueName": "catalogItemsQueue",
               "ReceiveMessageWaitTimeSeconds": 20
             }
+          },
+          "SNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+              "TopicName": "catalogBatchProcess-SNS"
+            }
+          },
+          "SNSSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+              "Endpoint": "avdeevvictor95@gmail.com",
+              "Protocol": "email",
+              "TopicArn": {
+                "Ref": "SNSTopic"
+              }
+            }
           }
         },
         "Outputs": {
@@ -271,7 +307,7 @@
           "CatalogBatchProcessLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CatalogBatchProcessLambdaVersionH8AGzJEWDHj0mpMmHj5Sy3v2l7NCSOsCcLx493FJB4E"
+              "Ref": "CatalogBatchProcessLambdaVersionlzlTXszOUrlKFdpuwpoJOw3FsAjjE0BVA58HP9tdY"
             },
             "Export": {
               "Name": "sls-nodejs-aws-task6-dev-CatalogBatchProcessLambdaFunctionQualifiedArn"
@@ -391,7 +427,7 @@
             "sqs": {
               "batchSize": 5,
               "arn": {
-                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"IamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][2][\"Resource\"][0]"
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"IamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][3][\"Resource\"][0]"
               }
             }
           }
@@ -402,7 +438,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "CatalogBatchProcessLambdaVersionH8AGzJEWDHj0mpMmHj5Sy3v2l7NCSOsCcLx493FJB4E"
+        "versionLogicalId": "CatalogBatchProcessLambdaVersionlzlTXszOUrlKFdpuwpoJOw3FsAjjE0BVA58HP9tdY"
       }
     },
     "resources": {
@@ -413,6 +449,22 @@
             "QueueName": "catalogItemsQueue",
             "ReceiveMessageWaitTimeSeconds": 20,
             "Properties": null
+          }
+        },
+        "SNSTopic": {
+          "Type": "AWS::SNS::Topic",
+          "Properties": {
+            "TopicName": "catalogBatchProcess-SNS"
+          }
+        },
+        "SNSSubscription": {
+          "Type": "AWS::SNS::Subscription",
+          "Properties": {
+            "Endpoint": "avdeevvictor95@gmail.com",
+            "Protocol": "email",
+            "TopicArn": {
+              "Ref": "SNSTopic"
+            }
           }
         }
       },
@@ -460,7 +512,7 @@
     "artifact": "C:\\Users\\Victor\\Documents\\Courses\\aws\\nodejs-aws-back-end\\src\\catalogbatchprocess\\.serverless\\nodejs-aws-task6.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/nodejs-aws-task6/dev/1633797509517-2021-10-09T16:38:29.517Z",
+    "artifactDirectoryName": "serverless/nodejs-aws-task6/dev/1633800535355-2021-10-09T17:28:55.355Z",
     "artifact": "nodejs-aws-task6.zip"
   }
 }

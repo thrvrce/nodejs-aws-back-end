@@ -13,6 +13,15 @@ provider:
   environment:
     SQS_URL:
       Ref: SQSQueue
+    SNS_ARN:
+      Ref: SNSTopic
+
+  iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "sns:*"
+    Resource:
+      Ref: SNSTopic
 
 resources:
   Resources:
@@ -22,6 +31,17 @@ resources:
         QueueName: catalogItemsQueue
         Properties:
         ReceiveMessageWaitTimeSeconds: 20
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: catalogBatchProcess-SNS
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: avdeevvictor95@gmail.com
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
 
   Outputs:
     CatalogItemsQueueUrl:
