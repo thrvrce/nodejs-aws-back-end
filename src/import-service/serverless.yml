@@ -26,6 +26,9 @@ provider:
         - "sqs:*"
       Resource: !ImportValue catalogItemsQueueArn
 
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
 
 functions:
   importProductsFile:
@@ -35,6 +38,12 @@ functions:
           path: import
           method: get
           cors: true
+          authorizer:
+              name: tokenAuthorizer
+              arn: "arn:aws:lambda:eu-west-1:369619171521:function:nodejs-aws-task7-basicAuthorizer-dev-basicAuthorizer"
+              resultTtlInSeconds: 0
+              identitySource: method.request.header.Authorization
+              type: token
   importFileParser:
     handler: handler.importFileParser
     events:

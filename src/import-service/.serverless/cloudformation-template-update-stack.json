@@ -190,7 +190,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/nodejs-aws-task5-import/dev/1633793593948-2021-10-09T15:33:13.948Z/nodejs-aws-task5-import.zip"
+          "S3Key": "serverless/nodejs-aws-task5-import/dev/1634780045306-2021-10-21T01:34:05.306Z/nodejs-aws-task5-import.zip"
         },
         "Handler": "handler.importProductsFile",
         "Runtime": "nodejs14.x",
@@ -222,7 +222,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/nodejs-aws-task5-import/dev/1633793593948-2021-10-09T15:33:13.948Z/nodejs-aws-task5-import.zip"
+          "S3Key": "serverless/nodejs-aws-task5-import/dev/1634780045306-2021-10-21T01:34:05.306Z/nodejs-aws-task5-import.zip"
         },
         "Handler": "handler.importFileParser",
         "Runtime": "nodejs14.x",
@@ -247,24 +247,24 @@
         "ImportFileParserLogGroup"
       ]
     },
-    "ImportProductsFileLambdaVersionXu0xT0z2a5RlB3jgN2cjgRijmHc0hiB55jl5XikxwQ": {
+    "ImportProductsFileLambdaVersionX1jkemC5vOZybh4oMi03hLv32wieEjYA41GarjmvWbk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ImportProductsFileLambdaFunction"
         },
-        "CodeSha256": "0TWC4m1gVWyJCw+LBTa0VYuGAdrj5HjgHE/LrKCk7N4="
+        "CodeSha256": "LCEb76OrfWKFyKVFz+OfMkQ9f5bDOlYcLq8LNlQLlvc="
       }
     },
-    "ImportFileParserLambdaVersionEJcdxppBTiOuGi4ysaw5W0O0CmZzKwoRwgIXUJPA4": {
+    "ImportFileParserLambdaVersionarrR6D27Z6weu6CgV0A6Xez0K1vUlzHcscvGyIIc3g": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ImportFileParserLambdaFunction"
         },
-        "CodeSha256": "0TWC4m1gVWyJCw+LBTa0VYuGAdrj5HjgHE/LrKCk7N4="
+        "CodeSha256": "LCEb76OrfWKFyKVFz+OfMkQ9f5bDOlYcLq8LNlQLlvc="
       }
     },
     "ImportFileParserCustomS31": {
@@ -391,7 +391,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/nodejs-aws-task5-import/dev/1633793593948-2021-10-09T15:33:13.948Z/custom-resources.zip"
+          "S3Key": "serverless/nodejs-aws-task5-import/dev/1634780045306-2021-10-21T01:34:05.306Z/custom-resources.zip"
         },
         "FunctionName": "nodejs-aws-task5-import-dev-custom-resource-existing-s3",
         "Handler": "s3/handler.handler",
@@ -493,7 +493,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "TokenAuthorizerApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -523,11 +526,39 @@
         },
         "MethodResponses": []
       },
-      "DependsOn": [
-        "ImportProductsFileLambdaPermissionApiGateway"
-      ]
+      "DependsOn": "TokenAuthorizerApiGatewayAuthorizer"
     },
-    "ApiGatewayDeployment1633793591345": {
+    "TokenAuthorizerApiGatewayAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": 0,
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "tokenAuthorizer",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "AuthorizerUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              "arn:aws:lambda:eu-west-1:369619171521:function:nodejs-aws-task7-basicAuthorizer-dev-basicAuthorizer",
+              "/invocations"
+            ]
+          ]
+        },
+        "Type": "TOKEN"
+      }
+    },
+    "ApiGatewayDeployment1634780042690": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -576,6 +607,64 @@
           ]
         }
       }
+    },
+    "TokenAuthorizerLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:369619171521:function:nodejs-aws-task7-basicAuthorizer-dev-basicAuthorizer",
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GatewayResponseDefault4XX": {
+      "Type": "AWS::ApiGateway::GatewayResponse",
+      "Properties": {
+        "ResponseParameters": {
+          "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+          "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+        },
+        "ResponseType": "DEFAULT_4XX",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "GatewayResponseDefault5XX": {
+      "Type": "AWS::ApiGateway::GatewayResponse",
+      "Properties": {
+        "ResponseParameters": {
+          "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+          "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+        },
+        "ResponseType": "DEFAULT_5XX",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
     }
   },
   "Outputs": {
@@ -590,7 +679,7 @@
     "ImportProductsFileLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ImportProductsFileLambdaVersionXu0xT0z2a5RlB3jgN2cjgRijmHc0hiB55jl5XikxwQ"
+        "Ref": "ImportProductsFileLambdaVersionX1jkemC5vOZybh4oMi03hLv32wieEjYA41GarjmvWbk"
       },
       "Export": {
         "Name": "sls-nodejs-aws-task5-import-dev-ImportProductsFileLambdaFunctionQualifiedArn"
@@ -599,7 +688,7 @@
     "ImportFileParserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ImportFileParserLambdaVersionEJcdxppBTiOuGi4ysaw5W0O0CmZzKwoRwgIXUJPA4"
+        "Ref": "ImportFileParserLambdaVersionarrR6D27Z6weu6CgV0A6Xez0K1vUlzHcscvGyIIc3g"
       },
       "Export": {
         "Name": "sls-nodejs-aws-task5-import-dev-ImportFileParserLambdaFunctionQualifiedArn"

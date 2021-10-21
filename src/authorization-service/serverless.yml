@@ -1,0 +1,16 @@
+service: nodejs-aws-task7-basicAuthorizer
+
+plugins:
+  - serverless-dotenv-plugin
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: eu-west-1
+
+functions:
+  basicAuthorizer:
+    handler: handler.basicAuthorizer
